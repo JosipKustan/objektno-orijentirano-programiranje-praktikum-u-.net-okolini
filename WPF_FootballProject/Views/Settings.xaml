@@ -1,0 +1,62 @@
+﻿<Window x:Class="WPF_FootballProject.Views.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_FootballProject.Views"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="300
+        " Background="#202124" Foreground="#e5e5e5" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            Margin="64 0 0 0"
+            >
+
+            <Label x:Name="lbLanguage" >
+                Choose application language
+            </Label>
+            <RadioButton x:Name="rbEnglish" Margin="8 8 8 8">
+                English
+            </RadioButton>
+            <RadioButton x:Name="rbCroatian" Margin="8 8 8 8">
+                Croatian
+            </RadioButton>
+
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            Margin="64 0 0 0"
+            >
+
+            <Label x:Name="lbLeague">
+                Choose football league
+            </Label>
+            <RadioButton x:Name="rbMan" Margin="8 8 8 8">
+                Man`s league
+            </RadioButton>
+            <RadioButton x:Name="rbWoman" Margin="8 8 8 8">
+                Woman`s league
+            </RadioButton>
+
+        </StackPanel>
+        <StackPanel
+            Grid.Row="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            <Button x:Name="btnSaveSettings" Click="Save_And_Continue_Click">
+                Save settings and continue
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
