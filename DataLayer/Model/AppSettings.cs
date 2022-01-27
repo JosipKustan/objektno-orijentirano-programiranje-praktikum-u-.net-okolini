@@ -16,10 +16,10 @@ namespace WindowsFormsProject.Models
 
         private const string SETTINGS_DIR = "Settings.json";
         private static string FULL_PATH = String.Concat(BASE_DIR, SETTINGS_DIR);
-        public Settings.League SavedLeague { get; set; }
-        public Settings.Language SavedLanguage { get; set; }
+        public League SavedLeague { get; set; }
+        public Language SavedLanguage { get; set; }
 
-        public AppSettings(Settings.League savedLeague, Settings.Language savedLanguage)
+        public AppSettings(League savedLeague, Language savedLanguage)
         {
             SavedLeague = savedLeague;
             SavedLanguage = savedLanguage;
@@ -39,6 +39,18 @@ namespace WindowsFormsProject.Models
             }
             FileIO.WriteJsonToFile(FULL_PATH, appSettings.SerializeSettings());
             
+        }
+
+        public enum League
+        {
+            Man,
+            Woman
+        }
+
+        public enum Language
+        {
+            English,
+            Croatian
         }
     }
 }

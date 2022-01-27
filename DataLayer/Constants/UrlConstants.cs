@@ -16,12 +16,14 @@ namespace DataLayer.Constants
         
 
         public const string MAN_FILE_BASE = "JSON files/Man_"; 
+        public const string FILE_BASE_DIR = "JSON files"; 
         public const string WOMAN_FILE_BASE = "JSON files/Woman_"; 
         public const string MATCH_FILE= "matches.json"; 
         public const string TEAM_RESULTS_FILE= "results.json"; 
  
         
-        public const string STORED_PLAYERS= "storedPlayers.json"; 
+        public const string STORED_PLAYERS= "storedPlayers.json";
+        public const string STORED_TEAM = "storedTeam.json";
         public const string STORED_IMAGES=  "StoredImages"; 
 
 

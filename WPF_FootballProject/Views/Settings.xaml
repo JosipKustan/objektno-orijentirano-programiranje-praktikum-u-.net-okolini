@@ -23,7 +23,7 @@
             <Label x:Name="lbLanguage" >
                 Choose application language
             </Label>
-            <RadioButton x:Name="rbEnglish" Margin="8 8 8 8">
+            <RadioButton x:Name="rbEnglish" Margin="8 8 8 8" IsChecked="True" >
                 English
             </RadioButton>
             <RadioButton x:Name="rbCroatian" Margin="8 8 8 8">
@@ -41,7 +41,7 @@
             <Label x:Name="lbLeague">
                 Choose football league
             </Label>
-            <RadioButton x:Name="rbMan" Margin="8 8 8 8">
+            <RadioButton x:Name="rbMan" Margin="8 8 8 8" IsChecked="True">
                 Man`s league
             </RadioButton>
             <RadioButton x:Name="rbWoman" Margin="8 8 8 8">

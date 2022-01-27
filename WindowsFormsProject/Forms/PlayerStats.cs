@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using WindowsFormsProject.Controls;
 using WindowsFormsProject.Utils;
 using PdfSharp.Drawing;
+using DataLayer.Utils;
 
 namespace WindowsFormsProject.Forms
 {
@@ -33,7 +34,7 @@ namespace WindowsFormsProject.Forms
             Players = players;
             TeamEvents = homeTeamEvents;
             InitializeComponent();
-            Players = (List<Player>)FootballApp.ReplaceWithStoredPlayer(Players);
+            Players = (List<Player>)StoredPlayers.ReplaceWithStoredPlayer(Players);
             InitPlayerStatList();
             InitPanel();
         }

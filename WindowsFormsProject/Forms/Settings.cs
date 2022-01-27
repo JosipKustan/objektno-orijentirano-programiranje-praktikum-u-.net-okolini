@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsProject.Models;
 using WindowsFormsProject.Utils;
+using static WindowsFormsProject.Models.AppSettings;
 
 namespace WindowsFormsProject
 {
@@ -32,7 +33,7 @@ namespace WindowsFormsProject
             try
             {
                AppSettings savedAppSettings = AppSettings.GetSavedAppSettings();
-                if (savedAppSettings.SavedLeague == Settings.League.Man)
+                if (savedAppSettings.SavedLeague == League.Man)
                 {
                     rbMan.Checked = true;
                 }
@@ -40,7 +41,7 @@ namespace WindowsFormsProject
                 {
                     rbWoman.Checked = true;
                 }
-                if (savedAppSettings.SavedLanguage == Settings.Language.English)
+                if (savedAppSettings.SavedLanguage == Language.English)
                 {
                     rbEnglish.Checked = true;
                 }
@@ -119,16 +120,6 @@ namespace WindowsFormsProject
             Program.UpdateLanguage(currentLanguage);
         }
 
-        public enum League
-        {
-            Man,
-            Woman
-        }
-
-        public enum Language
-        {
-            English,
-            Croatian
-        }
+        
     }
 }

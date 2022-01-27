@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="WPF_FootballProject.Components.MatchPreview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPF_FootballProject.Components" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="180">
+    <materialDesign:Card >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" >
+                </ColumnDefinition>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label x:Name="lblVenue" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">Something</Label>
+            
+            <Label x:Name="lblHomeTeam" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Center">Home Team</Label>
+            <Label x:Name="lblAwayTeam" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Center">Away Team</Label>
+
+            <Label x:Name="lblHomeTeamGoals" FontSize="22" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalContentAlignment="Center">0</Label>
+            <Label x:Name="lblAwayTeamGoals" FontSize="22" Grid.Row="2" Grid.Column="2" VerticalAlignment="Top" HorizontalContentAlignment="Center">0</Label>
+
+
+            <Label Grid.Row="2" Grid.Column="1" FontSize="20"  VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Bold">-</Label>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

@@ -7,14 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsProject.Forms;
+using static WindowsFormsProject.Models.AppSettings;
 
 namespace WindowsFormsProject
 {
     
     internal static class Program
     {
-        private static Settings.Language currentLanguage=Settings.Language.English;
-        private static Settings.League currentLeague=Settings.League.Man;
+        private static Language currentLanguage=Language.English;
+        private static League currentLeague=League.Man;
         private static String cultureInfo = "en-UK";
         /// <summary>
         /// The main entry point for the application.
@@ -31,7 +32,7 @@ namespace WindowsFormsProject
 
         private static void GetLocal()
         {
-            if (currentLanguage==Settings.Language.Croatian)
+            if (currentLanguage==Language.Croatian)
             {
                 cultureInfo = "hr-HR";
             }
@@ -39,11 +40,11 @@ namespace WindowsFormsProject
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
         }
 
-            public static void UpdateLanguage(Settings.Language cultureInfo)
+            public static void UpdateLanguage(Language cultureInfo)
         {
             currentLanguage = cultureInfo;
         } 
-        public static void UpdateLeague(Settings.League league)
+        public static void UpdateLeague(League league)
         {
             currentLeague = league;
         }

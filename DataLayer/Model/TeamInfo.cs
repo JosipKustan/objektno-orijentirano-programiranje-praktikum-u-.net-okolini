@@ -54,6 +54,12 @@ namespace DataLayer.Model
         {
             return $"{Country} ({FifaCode})";
         }
+
+        public override bool Equals(object obj) => obj is TeamInfo team &&
+                   Country == team.Country;
+
+
+        public override int GetHashCode() => Country.GetHashCode();
     }
 
     public partial class TeamInfo

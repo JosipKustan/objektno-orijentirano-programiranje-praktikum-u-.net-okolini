@@ -2,6 +2,7 @@
 using DataLayer.FileIO;
 using DataLayer.Model;
 using DataLayer.REST;
+using DataLayer.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,51 +16,43 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsProject.Controls;
+using static WindowsFormsProject.Models.AppSettings;
 
 namespace WindowsFormsProject.Forms
 {
     public partial class FootballApp : Form
     {
-        public static IList<Player> storedPlayers = new List<Player>();
+        
         //VARIABLES
         IList<TeamInfo> teams = new List<TeamInfo>();
-        IList<Player> players = new List<Player>();
         IList<Match> teamMatches = new List<Match>();
+        IList<Player> players = new List<Player>();
 
 
         //PROPS
-        private Settings.League League { get; set; }
+        private League League { get; set; }
         private String URL_BASE { get; set; }
         private String FILE_BASE { get; set; }
         public TeamInfo SelectedTeam { get; set; }
 
 
         //CONSTRUCTOR
-        public FootballApp(Settings.League currentLeague)
+        public FootballApp(League currentLeague)
         {
             this.League = currentLeague;
             SetLeagueProps();
             InitializeComponent();
             flowPanelFavorites.AllowDrop = true;
-            storedPlayers=GetStoredPlayers();
+            FileIO.GetStoredPlayers(FILE_BASE);
             btnRankedLists.Visible = false;
 
         }
 
-        private IList<Player> GetStoredPlayers()
-        {
-            String path = FILE_BASE + UrlConstants.STORED_PLAYERS;
-            if (!File.Exists(path))
-            {
-                File.Create(path);
-            }
-            IList<Player> players = FileIO.FetchObjectFromJsonFile<IList<Player>>(path);
-            return players!=null?players:storedPlayers;
-        }
+        
 
         private void SetLeagueProps()
         {
-            if (League==Settings.League.Man)
+            if (League==League.Man)
             {
                 URL_BASE = UrlConstants.MAN_URL_BASE;
                 FILE_BASE = UrlConstants.MAN_FILE_BASE;
@@ -97,11 +90,11 @@ namespace WindowsFormsProject.Forms
         {
             foreach (PlayerControl control in flowPlayerPanel.Controls)
             {
-                storedPlayers.Add(control.player);
+                StoredPlayers.storedPlayers.Add(control.player);
             }
             foreach (PlayerControl control1 in flowPanelFavorites.Controls)
             {
-                storedPlayers.Add(control1.player);
+                StoredPlayers.storedPlayers.Add(control1.player);
             }
         }
 
@@ -141,6 +134,28 @@ namespace WindowsFormsProject.Forms
 
             }
             btnSelectTeam.Enabled = true;
+            GetSavedTeam();
+        }
+
+        private void GetSavedTeam()
+        {
+            TeamInfo team = new TeamInfo();
+            try
+            {
+               team = FileIO.FetchObjectFromJsonFile<TeamInfo>(BASE_DIR + FILE_BASE + UrlConstants.STORED_TEAM);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Could not find saved favorite team");
+            }
+            if (team.Country!=null)
+            {
+                cbTeamSelection.SelectedIndex = cbTeamSelection.FindString(team.Country);
+                SelectTeam_Click(this, EventArgs.Empty);
+
+
+            }
         }
 
         private void SelectTeam_Click(object sender, EventArgs e)
@@ -151,7 +166,18 @@ namespace WindowsFormsProject.Forms
             }
 
             TeamInfo selectedTeam = (TeamInfo)cbTeamSelection.SelectedItem;
-           
+            new Thread(() =>
+            {
+                if (!File.Exists(BASE_DIR + FILE_BASE + UrlConstants.STORED_TEAM))
+                {
+                    if (!Directory.Exists(BASE_DIR + UrlConstants.FILE_BASE_DIR))
+                    {
+                        Directory.CreateDirectory(BASE_DIR + UrlConstants.FILE_BASE_DIR);
+                    }
+                    File.Create(BASE_DIR + FILE_BASE + UrlConstants.STORED_TEAM);
+                }
+                FileIO.WriteJsonToFile(BASE_DIR + FILE_BASE + UrlConstants.STORED_TEAM, JsonConvert.SerializeObject(selectedTeam));
+            }).Start();
             SetPlayersAsync(selectedTeam);
             btnRankedLists.Visible = true;
 
@@ -159,17 +185,17 @@ namespace WindowsFormsProject.Forms
 
         public async Task<IList<Match>> GetMatchesAsync(String fifaCode)
         {
-          
+            IList<Match> matches = new List<Match>();
             try
             {
-                return await HttpFetch.FetchDataFromUrlAsync<IList<Match>>(URL_BASE + UrlConstants.MATCH_BY_FIFA_CODE + fifaCode);
+                matches = await HttpFetch.GetMatchesFromHTTPAsync(fifaCode, URL_BASE);
             }
             catch (Exception)
             {
                 MessageBox.Show("Failed to Fetch from URL, trying to fetch from stored File");
                 try
                 {
-                    return await FileIO.FetchJsonFromFileAsync<IList<Match>>(FILE_BASE + UrlConstants.MATCH_FILE);
+                    matches = await FileIO.GetMatchesFromFileAsync(fifaCode,FILE_BASE);
                 }
                 catch (Exception)
                 {
@@ -178,7 +204,7 @@ namespace WindowsFormsProject.Forms
                     return null;
                 }
             }
-
+            return matches;
 
         }
         private async void SetPlayersAsync(TeamInfo team)
@@ -187,7 +213,14 @@ namespace WindowsFormsProject.Forms
 
             this.SelectedTeam = team;
 
-            matches= await GetMatchesAsync(team.FifaCode);
+            try
+            {
+                matches = await GetMatchesAsync(team.FifaCode);
+            }
+            catch (Exception)
+            {
+                
+            }
             
 
             TeamStatistics teamStatistics= matches.First().HomeTeamStatistics;
@@ -216,7 +249,7 @@ namespace WindowsFormsProject.Forms
         {
             players = teamStatistics.GetAllPlayers();
 
-            players = ReplaceWithStoredPlayer(players);
+            players = StoredPlayers.ReplaceWithStoredPlayer(players);
 
             flowPlayerPanel.Controls.Clear();
             flowPanelFavorites.Controls.Clear();
@@ -236,26 +269,7 @@ namespace WindowsFormsProject.Forms
             }
         }
 
-        public static IList<Player> ReplaceWithStoredPlayer(IList<Player> players)
-        {
-           IList<Player> playersTemp= players;
-
-           if (storedPlayers!=null)
-           {
-
-                foreach (Player storedPlayer in storedPlayers)
-                {
-                    int index = playersTemp.ToList().FindIndex(player=>player.Equals(storedPlayer));
-
-                    if (index > -1)
-                    {
-                        playersTemp[index] = storedPlayer;
-                    }
-
-                }
-           }
-           return playersTemp;
-        }
+        
 
         private void AcceptData(object sender, DragEventArgs e)
         {
@@ -340,7 +354,7 @@ namespace WindowsFormsProject.Forms
 
         private void SavePlayersOnFile(object sender, FormClosingEventArgs e)
         {
-            FileIO.WriteJsonToFile(FILE_BASE+UrlConstants.STORED_PLAYERS,JsonConvert.SerializeObject(storedPlayers));
+            FileIO.WriteJsonToFile(FILE_BASE + UrlConstants.STORED_PLAYERS, JsonConvert.SerializeObject(StoredPlayers.storedPlayers));
         }
 
         private void btnRankedLists_Click(object sender, EventArgs e)

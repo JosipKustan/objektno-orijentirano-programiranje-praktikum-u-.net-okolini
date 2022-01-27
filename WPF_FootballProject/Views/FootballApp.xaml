@@ -3,12 +3,148 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tz="http://schemas.abtsoftware.co.uk/transitionz"
         xmlns:local="clr-namespace:WPF_FootballProject.Views" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="FootballApp" Height="450" Width="800">
-    <Grid>
-        <materialDesign:Card Padding="32" Margin="16" Width="250" Height="100">
-            <TextBlock Style="{DynamicResource MaterialDesignBody2TextBlock}">My First Material Design App</TextBlock>
-        </materialDesign:Card>
+        Loaded="InitProps"
+        Title="FootballApp" MinHeight="450" MinWidth="580" Background="#202124" Foreground="#e5e5e5" WindowStartupLocation="CenterScreen" >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2vc"></BooleanToVisibilityConverter>
+    </Window.Resources>
+    
+    <Grid tz:Transitionz.Opacity="{tz:OpacityParams Duration=800, From=0, To=1, TransitionOn=Loaded}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MaxWidth="160"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                    <Label Margin="0 32 0 32" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0">FootBall!</Label>
+                <StackPanel Grid.Column="0" Grid.Row="1">
+                    <Label Margin="8 0 8 0" VerticalAlignment="Bottom" HorizontalAlignment="Left">Choose the team</Label>
+                    <ComboBox x:Name="cbTeamSelection" Margin="8 0 8 8" SelectionChanged="GetMatchAndDetails" >
+
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <StackPanel x:Name="teamDetailsPanel" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="8 8 8 8">
+            <materialDesign:Card Width="Auto" Height="Auto" 
+                    tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=800, TransitionOn=DataContextChanged}"
+                    tz:Transitionz.Translate="{tz:TranslateParams From='0,16', To='0,0', Duration=200, TransitionOn=DataContextChanged}">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="{Binding Country}" FontSize="14" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                        <Label Grid.Row="1">Group:</Label>
+                        <Label Content="{Binding GroupLetter}" FontSize="14" FontWeight="DemiBold" Grid.Row="1" Grid.Column="1"/>
+                        <Label Grid.Row="2">Points:</Label>
+                        <Label Content="{Binding Points}" FontSize="14" FontWeight="DemiBold" Grid.Row="2" Grid.Column="1"/>
+                        <materialDesign:Card  Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"  FontWeight="Light">Wins</Label>
+                                <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"  FontWeight="Light">Losses</Label>
+                                <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"  FontWeight="Light">Draws</Label>
+                                <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding Wins}"/>
+                                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding Losses}"/>
+                                <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding Draws}"/>
+                            </Grid>
+                        </materialDesign:Card>
+                        <materialDesign:Card  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"  FontWeight="Light">F</Label>
+                                <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"  FontWeight="Light">A</Label>
+                                <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"  FontWeight="Light">GD</Label>
+                                <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding GoalsFor}"/>
+                                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding GoalsAgainst}"/>
+                                <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" FontSize="14" FontWeight="DemiBold" Content="{Binding GoalDifferential}"/>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+        </StackPanel>
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" VerticalScrollBarVisibility="Auto" >
+            <ItemsControl x:Name="matchItemControl" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <materialDesign:Card x:Name="Jorje" Width="240" Margin="16 16 16 16" MouseDoubleClick="OpenMatch"
+                                        tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Loaded}"
+                                        tz:Transitionz.Translate="{tz:TranslateParams From='16,0', To='0,0', Duration=200, TransitionOn=Loaded}"
+                                             >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto" >
+                                    </ColumnDefinition>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Label x:Name="lblVenue" Grid.ColumnSpan="3"  VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" Content="{Binding Path=Venue}" />
+
+                                <Label x:Name="lblHomeTeam"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="#a1a1e5" Cursor="Hand" HorizontalContentAlignment="Center" Content="{Binding Path=HomeTeam.Country}" MouseDown="OpenTeamDetails"/>
+                                <Label x:Name="lblAwayTeam" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Foreground="#a1a1e5" Cursor="Hand" HorizontalContentAlignment="Center" Content="{Binding Path=AwayTeam.Country}" MouseDown="OpenTeamDetails"/>
+
+                                <Label x:Name="lblHomeTeamGoals" FontSize="22" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Content="{Binding Path=HomeTeam.Goals}" />
+                                <Label x:Name="lblAwayTeamGoals" FontSize="22" Grid.Row="2" Grid.Column="2" VerticalAlignment="Top" HorizontalContentAlignment="Center" Content="{Binding Path=AwayTeam.Goals}"/>
+
+
+                                <Label Grid.Row="2" Grid.Column="1" FontSize="20"  VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Bold">-</Label>
+                            </Grid>
+                        </materialDesign:Card>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
